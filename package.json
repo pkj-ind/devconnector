@@ -1,0 +1,21 @@
+{
+  "name": "devconnector",
+  "version": "1.0.0",
+  "description": "Social network for Developers",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pramod Jaiswal",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "express-validator": "^6.2.0",
+    "mongoose": "^5.7.4",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}
