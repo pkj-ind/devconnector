@@ -5,12 +5,13 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon server"
+    "start": "nodemon server"
   },
   "author": "Pramod Jaiswal",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "config": "^3.2.3",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "mongoose": "^5.7.4",
