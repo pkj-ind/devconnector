@@ -1,8 +1,13 @@
 const express=require("express");
 const app = express()
 const connectDB =require('./config/db')
+//const bodyparser=require('body-parser')
 
 connectDB();
+// initilaize body parser
+//app.use(bodyparser.urlencoded({extended:true}))
+app.use(express.json({extended:false}))
+
 app.get('/',(req,res)=>{
     console.log(req.params)
     res.send("Api Running !!")
