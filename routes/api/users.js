@@ -47,8 +47,10 @@ user = new User({
   password 
 })
   // Encrypt password
+  console.log(user.name,user.email,user.avatar,user.password)
 const salt= await bcrypt.genSalt(10);
-user.password=await bcrypt.hash(password,salt)
+user.password=await bcrypt.hash(user.password,salt)
+
 console.log(user.name,user.email,user.avatar,user.password)
 await user.save();
   // Retuen JSONwebauth
@@ -70,7 +72,7 @@ res.json({token})
 
    }catch(err){
    console.error(err.message);
-   res.status(500).send('Server error')
+   return res.status(500).send('Server error from user api')
    }
 
 })
