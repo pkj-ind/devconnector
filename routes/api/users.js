@@ -2,7 +2,9 @@ const express = require('express')
 const router = express.Router();
 const gravatar=require('gravatar')
 const bcrypt = require('bcryptjs')
-const { check, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator')
+const jwt = require('jsonwebtoken')
+const config=require('config')
 
 const User=require('../../models/Users')
 //@route    POST Route
@@ -32,7 +34,6 @@ async (req,res)=>{
        console.log('user already present')
        res.status(400).json({errors:[{msg:'User already exists'}]})
      }
-
   // Get gravatar
 const avatar=gravatar.url(email,{
   s:'200',
@@ -43,18 +44,30 @@ user = new User({
   name,
   email,
   avatar,
-  password
-  
+  password 
 })
-//console.log(user.name,user.email,user.avatar,user.password)
   // Encrypt password
 const salt= await bcrypt.genSalt(10);
 user.password=await bcrypt.hash(password,salt)
 console.log(user.name,user.email,user.avatar,user.password)
 await user.save();
   // Retuen JSONwebauth
+const payload ={
+  user:{
+    id:user.id
+  }
+}
 
-  res.send('User Registered')
+jwt.sign(payload,config.get('jwtSecret'),
+{expiresIn:36000},
+(err,token)=>{
+if(err) throw err;
+//console.log('inside JSON web auth',token)
+res.json({token})
+})
+
+ // res.send('User Registered')
+
    }catch(err){
    console.error(err.message);
    res.status(500).send('Server error')
