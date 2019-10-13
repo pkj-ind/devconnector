@@ -8,7 +8,7 @@ const config=require('config')
 
 const User=require('../../models/Users')
 //@route    POST Route
-//@desc     testing route
+//@desc     Register user
 //@access   Public
 
 router.post('/',[
