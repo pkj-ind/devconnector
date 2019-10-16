@@ -15,7 +15,7 @@ const User = require('../../models/Users');
 router.get('/me',auth,async(req,res)=>{
    try {
     const profile = await Profile.findOne({user:req.user.id})
-    .populate('user',['name','avatar'])
+    .populate('users',['name','avatar'])
     if(!profile){
         res.status(400).json({msg:'There is no profile found for this user'})
     }
@@ -94,5 +94,58 @@ router.post('/',[auth,[
     }
     
 );
+
+// GET api/profile
+//desc Get all profiles
+// access public
+
+router.get('/',async (req,res)=>{
+try {
+    const profiles=await Profile.find().populate('Users',['name','avatar'])
+    res.json(profiles);
+} catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error')
+}
+})
+// Get api/profile/user/:user_id
+//access public
+router.get('/user/:user_id',async(req,res)=>{
+    try {
+        const profile=await Profile.findOne({user:req.params.user_id})
+        .populate('Users',['name','avatar'])
+        if(!profile) {
+            return res.status(400).json({msg:"There is no profile for this User"})
+        }
+        res.json(profile);
+    } catch (error) {
+        console.error(error.message);
+        if(error.kind=='ObjectId'){
+            return res.status(400).json({msg:"Invalid ObjectId"})
+        }
+        res.status(500).send('Server Error')  
+    }
+}
+)
+
+// Delete Profile, User and posts
+//access private
+router.delete('/',auth,async(req,res)=>{
+    try {
+    // @todo remove user posts
+    console.log(req.user.id)
+    //Remove profile
+   await Profile.findOneAndRemove({user:req.user.id})
+    
+    //Remove User
+    await User.findOneAndRemove({_id:req.user.id})
+
+    res.json({msg:'User got deleted'})
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).send('Server error while deleting User data')
+    }
+    
+})
 
 module.exports = router;
