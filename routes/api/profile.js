@@ -17,7 +17,7 @@ router.get('/me',auth,async(req,res)=>{
     const profile = await Profile.findOne({user:req.user.id})
     .populate('users',['name','avatar'])
     if(!profile){
-        res.status(400).json({msg:'There is no profile found for this user'})
+        return res.status(400).json({msg:'There is no profile found for this user'})
     }
      res.json(profile);
 
@@ -89,7 +89,7 @@ router.post('/',[auth,[
       res.json(profile)
    }catch(err){
      console.error(err.message)
-     res.status(500).send('Server Error from profile api')
+     return res.status(500).send('Server Error from profile api')
    }
     }
     
@@ -105,7 +105,7 @@ try {
     res.json(profiles);
 } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error')
+    return res.status(500).send('Server Error')
 }
 })
 // Get api/profile/user/:user_id
@@ -135,7 +135,7 @@ router.delete('/',auth,async(req,res)=>{
     // @todo remove user posts
     console.log(req.user.id)
     //Remove profile
-   await Profile.findOneAndRemove({user:req.user.id})
+  // await Profile.findOneAndRemove({user:req.user.id})
     
     //Remove User
     await User.findOneAndRemove({_id:req.user.id})
@@ -143,9 +143,148 @@ router.delete('/',auth,async(req,res)=>{
     res.json({msg:'User got deleted'})
     } catch (error) {
         console.error(error.message)
-        res.status(500).send('Server error while deleting User data')
+       return res.status(500).send('Server error while deleting User data')
     }
     
 })
 
+// @route PUT method api/profile/experience
+// Private access
+
+router.put('/experience',[
+    auth,[
+check('title','Title is required').not().isEmpty(),
+check('company','Company is required').not().isEmpty(),
+check('from','From date is required').not().isEmpty()
+]
+],async (req,res)=>{
+const errors= validationResult(req);
+if(!errors.isEmpty()){
+    return res.status(400).json({errors:errors.array() })
+}
+
+const {
+    title,
+    company,
+    location,
+    from,
+    to,
+    current,
+    description
+}=req.body;
+console.log(title,company,location,from,current,description)
+const newExp={ 
+    title,
+    company,
+    location,
+    from,
+    to,
+    current,
+    description
+}
+try {
+
+const profile=await Profile.findOne({user:req.user.id});
+
+profile.experience.unshift(newExp)
+
+await profile.save()
+
+res.json(profile)
+
+} catch (err) {
+    console.error(err.message)
+    return res.status(500).send('Server error while adding Exp') 
+}
+})
+// DELETE api/profile/experience
+// @access Private
+// @Desc delete experience 
+
+router.delete('/experience/:exp_id',auth, async(req,res)=>{
+    try {
+        const profile= await Profile.findOne({user:req.user.id});
+        // Get remove index
+        const removeIndex=profile.experience.map(item => item.id).indexOf(req.params.exp_id)
+        profile.experience.splice(removeIndex,1)
+
+        await profile.save();
+
+        res.json(profile);
+
+    } catch (error) {
+        console.error(err.message)
+    return res.status(500).send('Server error while deleting Exp') 
+    }
+})
+///////////////////////////////////////
+
+// @route PUT method api/profile/education
+// Private access
+
+router.put('/education',[
+    auth,[
+check('school','school is required').not().isEmpty(),
+check('degree','Degree is required').not().isEmpty(),
+check('fieldofstudy','Field Of Study is required').not().isEmpty(),
+check('from','From date is required').not().isEmpty()
+]
+],async (req,res)=>{
+const errors= validationResult(req);
+if(!errors.isEmpty()){
+    return res.status(400).json({errors:errors.array() })
+}
+
+const {
+    school,
+    degree,
+    fieldofstudy,
+    from,
+    current,
+    description
+}=req.body;
+
+const newEdu={ 
+    school,
+    degree,
+    fieldofstudy,
+    from,
+    current,
+    description
+}
+try {
+
+const profile=await Profile.findOne({user:req.user.id});
+
+profile.education.unshift(newEdu)
+
+await profile.save()
+
+res.json(profile)
+
+} catch (err) {
+    console.error(err.message)
+    return res.status(500).send('Server error while adding Edu') 
+}
+})
+// DELETE api/profile/education
+// @access Private
+// @Desc delete education 
+
+router.delete('/education/:edu_id',auth, async(req,res)=>{
+    try {
+        const profile= await Profile.findOne({user:req.user.id});
+        // Get remove index
+        const removeIndex=profile.education.map(item => item.id).indexOf(req.params.exp_id)
+        profile.education.splice(removeIndex,1)
+
+        await profile.save();
+        
+        res.json(profile);
+
+    } catch (error) {
+        console.error(err.message)
+    return res.status(500).send('Server error while deleting Edu') 
+    }
+})
 module.exports = router;
