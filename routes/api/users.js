@@ -32,7 +32,7 @@ async (req,res)=>{
      let user= await User.findOne({email});
      if(user){
        console.log('user already present')
-       res.status(400).json({errors:[{msg:'User already exists'}]})
+      return res.status(400).json({errors:[{msg:'User already exists'}]})
      }
   // Get gravatar
 const avatar=gravatar.url(email,{
