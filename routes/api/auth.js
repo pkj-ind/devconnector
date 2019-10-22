@@ -39,14 +39,14 @@ async (req,res)=>{
      let user= await User.findOne({email:email});
      //console.log(user);
      if(!user){
-       res.status(400).json({errors:[{msg:'Invalid Email and Credentials pair'}]})
+      return res.status(400).json({errors:[{msg:'Invalid Email and Credentials pair'}]})
      }
      
   // password compare
  
 const isMatch= await bcrypt.compare(password,user.password);
 if(!isMatch){
-    res.status(400).json({errors:[{msg:'Invalid email and Credentials pair'}]})
+    return res.status(400).json({errors:[{msg:'Invalid email and Credentials pair'}]})
 }
 
   // Return JSONwebauth
