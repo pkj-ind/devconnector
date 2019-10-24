@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom'
 //import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux'
 import {setAlert} from '../../actions/alert'
+import PropTypes from 'prop-types'
+
 
 const Register = () =>{
     const [formData, setFormData]=useState({
@@ -79,6 +81,9 @@ const Register = () =>{
     )
 }
 
+Register.prototype={
+  setAlert:PropTypes.func.isRequired,
+}
 // this will allow us to access props.setAlert
 //export default connect(null,setAlert) (Register) 
 export default Register
