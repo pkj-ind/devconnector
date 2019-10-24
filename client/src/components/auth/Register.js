@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 //import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux'
 import {setAlert} from '../../actions/alert'
+import {register} from '../../actions/auth'
 import PropTypes from 'prop-types'
 
 
@@ -24,7 +25,8 @@ const Register = () =>{
             //console.log('Password do not match')
             dispatch(setAlert('Passwords do not match!', 'danger'))
         } else {
-            console.log('SUCCESS')
+          console.log(name,email,password)
+            dispatch(register({name,email,password}));
            
         }
         
@@ -39,7 +41,8 @@ const Register = () =>{
           name="name" 
           value={name} 
           onChange={e=>onChange(e)}
-          required />
+          required
+           />
         </div>
         <div className="form-group">
           <input type="email" placeholder="Email Address" 
@@ -83,6 +86,7 @@ const Register = () =>{
 
 Register.prototype={
   setAlert:PropTypes.func.isRequired,
+  register:PropTypes.func.isRequired
 }
 // this will allow us to access props.setAlert
 //export default connect(null,setAlert) (Register) 
