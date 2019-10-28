@@ -1,9 +1,14 @@
 import React,{Fragment, useState} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+//import { useDispatch } from 'react-redux'
+//import {setAlert} from '../../actions/alert'
+import {login} from '../../actions/auth'
+import PropTypes from 'prop-types'
 
 
-const Login = () =>{
+const Login = ({login}) =>{
     const [formData, setFormData]=useState({
         email:'',
         password:''
@@ -14,8 +19,7 @@ const Login = () =>{
 
     const onSubmit = async e =>{
         e.preventDefault();
-
-            const login={email,password}
+        login(email,password)
 
             try {
                 //since we are sending data create config and define header type
@@ -26,6 +30,7 @@ const Login = () =>{
                 };
                 const body=JSON.stringify(login)
                 const res = await axios.post('/api/auth',body,config);
+
                 console.log(res.data)
             } catch (error) {
                 console.error(error.response.data)
@@ -65,5 +70,7 @@ const Login = () =>{
         </Fragment>
     )
 }
-
-export default Login
+Login.prototype={
+  login:PropTypes.func.isRequired
+}
+export default connect(null,{login})(Login)
