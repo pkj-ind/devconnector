@@ -6,8 +6,13 @@ import {logout} from '../../actions/auth'
 const Navbar = (props) =>{
 const authLinks=(<ul>
   <li>
-  <Link to="/login" onClick={props.logout}>Logout</Link>
-</li>
+    <Link to="/dashboard">
+      <i className='fas fa-user'/>{' '}
+      Dashboard</Link>
+  </li>
+  <li>
+   <Link to="/login" onClick={props.logout}>Logout</Link>
+  </li>
 </ul>
 );
 
