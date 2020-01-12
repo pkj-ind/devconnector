@@ -1,6 +1,7 @@
 import React,{Fragment,useEffect} from 'react';
 import './App.css';
-import Navbar from './components/layout/Navbar';
+// import Navbar from './components/layout/Navbar';
+import Navbar from './Navbar'
 import Landing from './components/layout/Landing';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import Register from './components/auth/Register'
@@ -19,15 +20,18 @@ if(localStorage.token){
   setAuthToken(localStorage.token);
 }
 
+
+
 function App() {
   useEffect(()=>{
     store.dispatch(loadUser())
   },[])
-
+   
   return (
     <Provider store={store}>
     <Router>
       <Fragment>
+    {/*{window.location.pathname==="/login" ? null : <Navbar /> }*/} 
     <Navbar />
     <Route exact path='/' component={Landing} />
     <section className="container">
